@@ -1,5 +1,19 @@
-<script setup>
+<script>
 import { RouterLink } from 'vue-router'
+
+export default {
+  name: 'Header',
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+  methods: {
+    handleRegister() {
+      this.$store.dispatch("auth/logout").then(() => this.$router.push('/'))
+    },
+  }
+};
 </script>
 
 
@@ -12,22 +26,24 @@ import { RouterLink } from 'vue-router'
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- <li class="nav-item">
-                <RouterLink to="/login" class="nav-link active">Login</RouterLink>
-                </li>
-                <li class="nav-item">
-                <RouterLink to="/cadastrar" class="nav-link active">Cadastrar</RouterLink>
-                </li> -->
-                <!-- <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li> -->
             </ul>
-            <ul class="d-flex navbar-nav">
+            <ul v-if="!currentUser" class="d-flex navbar-nav">
                 <li class="nav-item">
                     <RouterLink to="/login" class="nav-link active">Login</RouterLink>
                 </li>
                 <li class="nav-item">
                     <RouterLink to="/cadastrar" class="nav-link active">Cadastrar</RouterLink>
+                </li>
+            </ul>
+            <ul v-if="currentUser" class="d-flex navbar-nav">
+                <li class="nav-item">
+                    <RouterLink to="/perfil" class="nav-link active">Perfil</RouterLink>
+                </li>
+                <li class="nav-item">
+                    <RouterLink to="/sensores" class="nav-link active">Sensores</RouterLink>
+                </li>
+                <li class="nav-item">
+                    <a @click="handleRegister" class="nav-link active">Sair</a>
                 </li>
             </ul>
             </div>
