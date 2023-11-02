@@ -1,6 +1,11 @@
+<script setup>
+  import Signup from '../components/Signup.vue'
+</script>
+
+
 <template>
   <div>
-    <h1>Página de cadastro</h1>
+    <Signup />
   </div>
 </template>
 
