@@ -9,10 +9,15 @@ import { FontAwesomeIcon } from './plugins/font-awesome'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
+import setupInterceptors from './services/setupInterceptors'
+
 const app = createApp(App)
+
+setupInterceptors(store)
 
 app.use(router)
 app.use(store)
+
 app.component("font-awesome-icon", FontAwesomeIcon)
 
 app.mount('#app')

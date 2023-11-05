@@ -1,5 +1,11 @@
+<script>
+export default {
+  
+}
+</script>
+
 <template>
-    <div>
-        <h1>Página de sensores</h1>
+    <div>  
+        Sensor {{ $route.params.sensorId }}
     </div>
 </template>

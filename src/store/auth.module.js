@@ -36,6 +36,9 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    refreshUser({ commit }, user) {
+      commit('refreshUser', user);
     }
   },
   mutations: {
@@ -56,6 +59,10 @@ export const auth = {
     },
     registerFailure(state) {
       state.status.loggedIn = false;
+    },
+    refreshUser(state, user) {
+      state.status.loggedIn = true;
+      state.user = user;
     }
   }
 };

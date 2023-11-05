@@ -1,16 +1,17 @@
 <script>
-import { RouterLink } from 'vue-router'
+import EventBus from "../common/EventBus";
+import TokenService from "../services/token.service";
 
 export default {
   name: 'Header',
   computed: {
     currentUser() {
-      return this.$store.state.auth.user;
+      return TokenService.getUser(this.$store);
     },
   },
   methods: {
     handleRegister() {
-      this.$store.dispatch("auth/logout").then(() => this.$router.push('/'))
+      EventBus.dispatch('logout')
     },
   }
 };

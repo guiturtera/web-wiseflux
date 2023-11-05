@@ -4,13 +4,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Align items at the top */
-  margin: 0; 
+  margin: 0;
 }
-
-/* #app {
-  height: 100vh; /* Set the height to 100% of the viewport height
-  width: 100%;
-} */
 
 @media (hover: hover) {
   a:hover {

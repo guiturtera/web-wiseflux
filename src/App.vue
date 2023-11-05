@@ -1,7 +1,33 @@
-<script setup>
-import { RouterView } from 'vue-router'
+<script>
 import Header from './components/Header.vue'
 import Login from './components/Login.vue'
+
+import EventBus from "./common/EventBus";
+
+export default {
+  components: {
+    Header, Login
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
+  },
+  mounted() {
+    EventBus.on("logout", () => {
+      this.logOut();
+    });
+
+    EventBus.on("tokenExpired", () => {
+      alert("Token expirado. Você deve logar novamente!")
+      this.logOut();
+    })
+  },
+  beforeDestroy() {
+    EventBus.remove("logout");
+  }
+};
 </script>
 
 <template>
