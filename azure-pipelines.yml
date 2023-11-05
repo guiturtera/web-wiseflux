@@ -34,9 +34,11 @@ steps:
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
-- task: AzureWebApp@1
+- task: AzureRmWebAppDeployment@4
   inputs:
-    azureSubscription: '38c5c508-1dee-43c3-bceb-43a462cbfb4d'
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure for Students(1)(38c5c508-1dee-43c3-bceb-43a462cbfb4d)'
     appType: 'webAppLinux'
-    appName: 'wiseflux'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    WebAppName: 'wiseflux-prod'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+
