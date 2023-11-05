@@ -40,5 +40,5 @@ steps:
     azureSubscription: 'Azure for Students(1)(38c5c508-1dee-43c3-bceb-43a462cbfb4d)'
     appType: 'webAppLinux'
     WebAppName: 'wiseflux-prod'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
