@@ -23,12 +23,21 @@ steps:
     versionSpec: '20.9.0'
   displayName: 'Install Node.js'
 
+# Echo the VUE_APP_API_URL before the build for debugging purposes
+- script: |
+    echo "VUE_APP_API_URL before build: $(apiUrl)"
+  displayName: 'Echo API URL Before Build'
+
 - script: |
     npm install
     npm run build
   env:
     VUE_APP_API_URL: $(apiUrl)
   displayName: 'npm install and build'
+
+- script: |
+    echo "VUE_APP_API_URL after build: $(VUE_APP_API_URL)"
+  displayName: 'Echo API URL After Build'
 
 - script: |
     echo "Listing contents of dist directory:"
