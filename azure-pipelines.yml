@@ -24,9 +24,24 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
+    echo "VUE_APP_API_URL=\"$(apiUrl)\"" > .env
+  displayName: 'Create .env file'
+
+- script: |
+    cat .env
+  displayName: 'Display .env file contents'
+
+
+- script: |
     npm install
     npm run build
+  env:
+    VUE_APP_API_URL: $(apiUrl)
   displayName: 'npm install and build'
+
+- script: |
+    echo "VUE_APP_API_URL after build: $(VUE_APP_API_URL)"
+  displayName: 'Echo API URL After Build'
 
 - script: |
     echo "Listing contents of dist directory:"
