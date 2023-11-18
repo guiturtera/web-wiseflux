@@ -24,7 +24,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    echo "VUE_APP_API_URL=$(apiUrl)" > .env
+    echo "VUE_APP_API_URL=\"$(apiUrl)\"" > .env
   displayName: 'Create .env file'
 
 - script: |
