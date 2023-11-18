@@ -28,6 +28,11 @@ steps:
   displayName: 'Create .env file'
 
 - script: |
+    cat .env
+  displayName: 'Display .env file contents'
+
+
+- script: |
     npm install
     npm run build
   env:
