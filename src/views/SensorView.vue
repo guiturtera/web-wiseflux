@@ -1,36 +1,8 @@
 <template>
   <div>
-    <h2>Sensor Configuration</h2>
+    <h2>Configurações do sensor:</h2>
     <div v-if="sensor">
-      <div class="form-group row">
-        <label for="sensorName" class="col-sm-2 col-form-label">Sensor Name:</label>
-        <div class="col-sm-8">
-          <input id="sensorName" v-model="sensor.sensorName" readonly class="form-control" />
-        </div>
-        <div class="col-sm-2">
-          <button @click="copyToClipboard(sensor.sensorName)" class="btn btn-primary">Copy</button>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for="sensorGuid" class="col-sm-2 col-form-label">Chave:</label>
-        <div class="col-sm-8">
-          <input id="sensorGuid" v-model="sensor.sensorGuid" readonly class="form-control" />
-        </div>
-        <div class="col-sm-2">
-          <button @click="copyToClipboard(sensor.sensorGuid)" class="btn btn-primary">Copy</button>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label for="sensorType" class="col-sm-2 col-form-label">Type:</label>
-        <div class="col-sm-8">
-          <input id="sensorType" v-model="sensor.sensorType" readonly class="form-control" />
-        </div>
-        <div class="col-sm-2">
-          <button @click="copyToClipboard(sensor.sensorType)" class="btn btn-primary">Copy</button>
-        </div>
-      </div>
+      <SensorHandler :fetchedSensor='sensor' mode='edit'/>
     </div>
     <div v-else>
         <h3>Carregando sensor...</h3>
@@ -46,22 +18,40 @@
 
 <script>
 import SensorService from "../services/sensor.service"
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from "yup";
+import SensorHandler from '../components/SensorHandler.vue';
 
 export default {
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+    SensorHandler
+  },
   data() {
+    const schema = yup.object().shape({
+      sensorName: yup.string().required("Nome do sensor é obrigatório"),
+      sensorType: yup.string().required("É necessário selecionar um tipo de sensor").oneOf(['Electricity', 'Water', 'Gas'], "Tipo de sensor inválido!"),
+    });
+
     return {
       sensor: null, 
-      sensorMeasures: [], // Array of sensor measure objects
+      sensorMeasures: [],
+      isEditMode: false,
+      isLoading: false,
+      errorMessage: null,
+      schema
     };
   },
   async created() {
-    this.sensor = (await SensorService.getAllSensors()).data?.response;
+    this.sensor = (await SensorService.getSensor(this.$route.params.sensorId)).data?.response;
 
     // Fetch measures based on the retrieved sensorId
-    if (this.sensor && this.sensor.sensorId) {
-      const measuresResponse = await SensorService.getSensorMeasures(this.sensor.sensorId);
-      this.sensorMeasures = measuresResponse.data?.response;
-    }
+    //if (this.sensor && this.sensor.sensorId) {
+      //const measuresResponse = await SensorService.getSensorMeasures(this.sensor.sensorId);
+      //this.sensorMeasures = measuresResponse.data?.response;
+    //}
   },
   methods: {
     copyToClipboard(value) {
@@ -72,6 +62,28 @@ export default {
       document.execCommand("copy");
       document.body.removeChild(el);
       // Optionally, you can provide user feedback here
+    },
+
+    toggleEditMode() {
+      this.isEditMode = !this.isEditMode;
+    },
+
+    async handleEdit() {
+      this.loading = true
+      try {
+        let editedSensor = {
+          "sensorName": this.sensor['sensorName'],
+          "sensorType": this.sensor['sensorType']
+        }
+        await SensorService.updateSensor(this.sensor.sensorId, editedSensor);
+        this.isEditMode = false;
+        this.errorMessage = null;
+      } catch (error) {
+        console.error("Error updating sensor:", error);
+        this.errorMessage = "Failed to update sensor. Please try again.";
+      } finally {
+        this.loading = false
+      }
     },
   },
 };
