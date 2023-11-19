@@ -36,11 +36,11 @@ steps:
     npm install
     npm run build
   env:
-    VUE_APP_API_URL: $(apiUrl)
+    VITE_APP_API_URL: $(apiUrl)
   displayName: 'npm install and build'
 
 - script: |
-    echo "VUE_APP_API_URL after build: $(VUE_APP_API_URL)"
+    echo "VITE_APP_API_URL after build: $(VITE_APP_API_URL)"
   displayName: 'Echo API URL After Build'
 
 - script: |
