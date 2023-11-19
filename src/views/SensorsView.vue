@@ -56,7 +56,7 @@ export default {
         </div>
         
           <h5 v-if="userSensors.length == 0">Parece que você não possui nenhum sensor...</h5>
-          <button type="button" class="btn btn-primary mt-5">+ Adicionar novo sensor</button>
+          <button type="button" class="btn btn-primary mt-5" @click="$router.push(`/sensores/adicionar`)">+ Adicionar novo sensor</button>
       </div>
 
       <div v-else>

@@ -1,7 +1,5 @@
 import axios from "axios";
 
-console.log(import.meta.env.VITE_APP_API_URL)
-//const baseURL = process.env.VUE_APP_API_URL + "/api/v1";S
 const baseURL = 'https://' + import.meta.env.VITE_APP_API_URL + "/api/v1";
 
 const instance = axios.create({
@@ -10,5 +8,6 @@ const instance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 
 export default instance;

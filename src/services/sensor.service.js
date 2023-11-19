@@ -13,6 +13,9 @@ class SensorService {
   updateSensor(sensorId, sensorToUpdate) {
     return api.put(`Sensor/edit/${sensorId}`, sensorToUpdate)
   }
+  deleteSensor(sensorId) {
+    return api.delete(`Sensor/delete/${sensorId}`)
+  }
 }
 
 export default new SensorService();

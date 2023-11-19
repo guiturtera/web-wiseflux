@@ -30,10 +30,15 @@ const router = createRouter({
       component: () => import('../views/SensorsView.vue')
     },
     {
+      path: '/sensores/adicionar',
+      name: 'sensor',
+      component: () => import('../views/SensorAddView.vue')
+    },
+    {
       path: '/sensores/:sensorId',
       name: 'sensor',
       component: () => import('../views/SensorView.vue')
-    }
+    },
   ]
 })
 

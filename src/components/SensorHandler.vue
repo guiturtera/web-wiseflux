@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div v-if="sensor">
       <!-- Sensor Name -->
       <Form @submit="handleSubmit" :validation-schema="schema">
@@ -45,7 +44,7 @@
           <div class="input-group">
             <input id="sensorGuid" v-model="sensor.sensorId" disabled class="form-control" />
             <div class="input-group-append">
-              <button @click="copyToClipboard(sensor.sensorId)" class="btn btn-primary">Copiar</button>
+              <button @click="copyToClipboard(sensor.sensorId)" class="btn btn-primary" type="button">Copiar</button>
             </div>
           </div>
         </div>
@@ -59,24 +58,21 @@
           <div class="input-group">
             <input id="sensorGuid" v-model="sensor.sensorGuid" disabled class="form-control" />
             <div class="input-group-append">
-              <button @click="copyToClipboard(sensor.sensorGuid)" class="btn btn-primary">Copiar</button>
+              <button @click="copyToClipboard(sensor.sensorGuid)" class="btn btn-primary" type="button">Copiar</button>
             </div>
           </div>
         </div>
       </div>
 
       <div v-if='mode == "edit"' class="col-sm-12 mt-3 mb-3">
-        <button v-if="isEditMode" :disabled="isLoading" type="submit" class="btn btn-primary">Salvar</button>
-        <button v-else @click="toggleEditMode" class="btn btn-success">Editar</button>
+        <button v-if="isEditMode" :disabled="isLoading" type="submit" class="btn btn-primary mr-2" style="margin-right: 1%;">Salvar</button>
+        <button v-else @click="toggleEditMode" class="btn btn-success" style="margin-right: 1%;" type="button">Editar</button>
+        <button v-if="mode == 'edit'" @click="deleteSensor" class="btn btn-danger mr-2" type="button">Deletar</button>
       </div>
       <div v-else class="col-sm-12 mt-3 mb-3">
         <button :disabled="isLoading" type="submit" class="btn btn-primary">Adicionar</button>
       </div>
       </Form>
-    </div>
-    <div v-else>
-        <h3>Carregando sensor...</h3>
-    </div>
   </div>
 </template>
 
@@ -103,7 +99,6 @@ export default {
 
     return {
       sensor: null, 
-      sensorMeasures: [],
       isEditMode: false,
       isLoading: false,
       errorMessage: null,
@@ -112,30 +107,26 @@ export default {
   },
   async created() {
     if (this.mode == 'add') {
-        this.sensor = (await SensorService.getSensor(this.$route.params.sensorId)).data?.response;
+        this.sensor = {
+          "sensorId": null,
+          "sensorName": "",
+          "sensorType": ""
+        }
     } else {
         this.sensor = this.fetchedSensor
     }
   },
   methods: {
-    copyToClipboard(value) {
-        const el = document.createElement("textarea");
-        el.value = value;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand("copy");
-        document.body.removeChild(el);
-
-        // Provide user feedback with fade-out effect
+    feedback(feedbackText, backgroundColor, textColor, duration) {
         const feedbackElement = document.createElement("div");
-        feedbackElement.innerText = "Copiado com sucesso!";
+        feedbackElement.innerText = feedbackText;
         feedbackElement.style.position = "fixed";
-        feedbackElement.style.top = "50%";
+        feedbackElement.style.top = "20%";
         feedbackElement.style.left = "50%";
         feedbackElement.style.transform = "translateX(-50%)";
         feedbackElement.style.padding = "10px";
-        feedbackElement.style.background = "#4CAF50";
-        feedbackElement.style.color = "white";
+        feedbackElement.style.background = backgroundColor;
+        feedbackElement.style.color = textColor;
         feedbackElement.style.borderRadius = "5px";
         feedbackElement.style.zIndex = "9999";
         document.body.appendChild(feedbackElement);
@@ -147,7 +138,18 @@ export default {
             setTimeout(() => {
             document.body.removeChild(feedbackElement);
             }, 1000); // 1 second for the fade-out transition
-        }, 3000); // Adjust the total duration as needed
+        }, duration); // Adjust the total duration as needed
+    },
+
+    copyToClipboard(value) {
+        const el = document.createElement("textarea");
+        el.value = value;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+
+        this.feedback("Copiado com sucesso!", "#4CAF50", "white", 2000)
     },
 
     toggleEditMode() {
@@ -162,17 +164,62 @@ export default {
           "sensorType": this.sensor['sensorType']
         }
         
-        if (this.mode == 'edit') await SensorService.updateSensor(this.sensor.sensorId, newSensor);
-        else await SensorService.addSensor(newSensor);
+        if (this.mode == 'edit') {
+            await SensorService.updateSensor(this.sensor.sensorId, newSensor);
+            this.$emit('sensorUpdated', this.sensorId)
+        } 
+        else {
+            let res = (await SensorService.addSensor(newSensor)).data.response;
+            this.$emit('sensorAdded', res)
+        }
         this.isEditMode = false;
         this.errorMessage = null;
       } catch (error) {
-        console.error("Error updating sensor:", error);
         this.errorMessage = "Failed to update sensor. Please try again.";
       } finally {
         this.loading = false
       }
     },
+
+    async tryToDeleteSensor(sensorId) {
+      try {
+        let deleteStatus = (await SensorService.deleteSensor(sensorId)).status
+        if (deleteStatus == 200) {
+          this.feedback("Sensor deletado com sucesso!", "#4CAF50", "white", 6000)
+          this.$router.push("/sensores")
+        } else {
+          
+        }
+      } catch (error) {
+        if(error.message == 'Request failed with status code 404') {
+          this.feedback("Sensor deletado com sucesso!", "#4CAF50", "white", 6000)
+          this.$router.push("/sensores")
+        } else {
+          this.feedback('Falha ao deletar sensor!', "#4CAF50", "white", 2000)
+        }
+      }
+      
+    },
+
+    async deleteSensor() {
+      if (this.sensor.sensorId) {
+        let isConfirmed = (await this.$swal({ 
+          title: "Tem certeza?", 
+          text: "Você irá perder todos os dados coletados do sensor!",
+          icon: "warning", 
+          showConfirmButton: true,
+          confirmButtonText: "Deletar",
+          confirmButtonColor: "red",
+          showDenyButton: true,
+          denyButtonText: "Cancelar",
+          denyButtonColor: "gray"
+        })).isConfirmed;
+
+        if (isConfirmed) {
+          await this.tryToDeleteSensor(this.sensor.sensorId)
+        }
+      }
+    }
   },
 };
 </script>

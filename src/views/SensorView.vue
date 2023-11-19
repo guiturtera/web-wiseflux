@@ -1,18 +1,23 @@
 <template>
   <div>
-    <h2>Configurações do sensor:</h2>
-    <div v-if="sensor">
-      <SensorHandler :fetchedSensor='sensor' mode='edit'/>
-    </div>
-    <div v-else>
-        <h3>Carregando sensor...</h3>
+    <div>
+      <h2>Configurações do sensor:</h2>
+      <div v-if="sensor">
+        <SensorHandler :fetchedSensor='sensor' mode='edit'/>
+      </div>
+      <div v-else>
+          <h3>Carregando sensor...</h3>
+      </div>
     </div>
 
-    <h2>Sensor Measures</h2>
-    <div v-for="measure in sensorMeasures" :key="measure.MeasureId">
-      <p>Value: {{ measure.MeasureValue }}</p>
-      <p>Time: {{ measure.MeasureTime }}</p>
+    <div>
+      <h2 class="mt-5">Dashboard do sensor</h2>
+      <div v-for="measure in sensorMeasures" :key="measure.MeasureId">
+        <p>Value: {{ measure.MeasureValue }}</p>
+        <p>Time: {{ measure.MeasureTime }}</p>
+      </div>
     </div>
+    
   </div>
 </template>
 
@@ -38,9 +43,6 @@ export default {
     return {
       sensor: null, 
       sensorMeasures: [],
-      isEditMode: false,
-      isLoading: false,
-      errorMessage: null,
       schema
     };
   },
@@ -52,39 +54,6 @@ export default {
       //const measuresResponse = await SensorService.getSensorMeasures(this.sensor.sensorId);
       //this.sensorMeasures = measuresResponse.data?.response;
     //}
-  },
-  methods: {
-    copyToClipboard(value) {
-      const el = document.createElement("textarea");
-      el.value = value;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-      // Optionally, you can provide user feedback here
-    },
-
-    toggleEditMode() {
-      this.isEditMode = !this.isEditMode;
-    },
-
-    async handleEdit() {
-      this.loading = true
-      try {
-        let editedSensor = {
-          "sensorName": this.sensor['sensorName'],
-          "sensorType": this.sensor['sensorType']
-        }
-        await SensorService.updateSensor(this.sensor.sensorId, editedSensor);
-        this.isEditMode = false;
-        this.errorMessage = null;
-      } catch (error) {
-        console.error("Error updating sensor:", error);
-        this.errorMessage = "Failed to update sensor. Please try again.";
-      } finally {
-        this.loading = false
-      }
-    },
   },
 };
 </script>
