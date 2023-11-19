@@ -1,7 +1,16 @@
 <template>
   <div>
     <div>
-      <h2>Configurações do sensor:</h2>
+      <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>Configurações do sensor</h2>
+            </div>
+            <div class="col-sm-3">
+                <button @click='explainVariables' class="btn btn-secondary"><span>Info</span></button>
+            </div>
+        </div>
+    </div>
       <div v-if="sensor">
         <SensorHandler :fetchedSensor='sensor' mode='edit'/>
       </div>
@@ -55,6 +64,23 @@ export default {
       //this.sensorMeasures = measuresResponse.data?.response;
     //}
   },
+  methods: {
+    explainVariables() {
+      this.$swal({ 
+          title: 'Informação', 
+          html: `Hoje não existem integrações nativas com os sensores.<br><br>
+          
+Para realizar integrações, você precisará utilizar os campos de <b>Id</b> e <b>Chave</b>.<br><br>
+
+Caso não exista uma integração nativa com seu sensor inteligente, é possível desenvolvê-la seguindo a <a href="https://wiseflux-prod.azurewebsites.net/swagger/index.html">documentação</a>.`, 
+          icon: 'info',
+          showConfirmButton: true,
+          confirmButtonText: "Ok",
+          confirmButtonColor: "gray"
+        }
+      )
+    }
+  }
 };
 </script>
 

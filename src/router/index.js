@@ -31,7 +31,7 @@ const router = createRouter({
     },
     {
       path: '/sensores/adicionar',
-      name: 'sensor',
+      name: 'addSensor',
       component: () => import('../views/SensorAddView.vue')
     },
     {
