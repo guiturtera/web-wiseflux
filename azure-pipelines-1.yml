@@ -28,7 +28,7 @@ steps:
     npm install
     npm run build
   env:
-    VUE_APP_API_URL: $(apiUrl)
+    VITE_APP_API_URL: $(apiUrl)
   displayName: 'npm install and build'
 
 - script: |
