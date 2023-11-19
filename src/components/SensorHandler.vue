@@ -3,66 +3,72 @@
       <!-- Sensor Name -->
       <Form @submit="handleSubmit" :validation-schema="schema">
       <div class="form-group row mt-4">
-        <label for="sensorName" class="col-sm-2 col-form-label">Nome:</label>
-        <div class="col-sm-8">
-          <Field
-            id="sensorName"
-            v-model="sensor.sensorName"
-            :disabled="!isEditMode && mode == 'edit'"
-            as="input"
-            class="form-control"
-            name="sensorName"
-          />
+        <div class="col-sm-6">
+          <label for="sensorName" class="col-form-label">Nome</label>
+          <div>
+            <Field
+              id="sensorName"
+              v-model="sensor.sensorName"
+              :disabled="!isEditMode && mode == 'edit'"
+              as="input"
+              class="form-control"
+              name="sensorName"
+            />
+          <ErrorMessage name="sensorName" class="text-danger" />
+          </div>
         </div>
-        <ErrorMessage name="sensorName" class="text-danger" />
+
+        <div class="col-sm-6">
+          <label for="sensorName" class="col-form-label">Tipo</label>
+          <div>
+            <Field
+              id="sensorType"
+              v-model="sensor.sensorType"
+              :disabled="mode == 'edit'"
+              as="select"
+              class="form-control"
+              name="sensorType" 
+            >
+              <option value="" disabled="disabled">Selecione um tipo de sensor</option>
+              <option value='Electricity'>Eletricidade</option>
+              <option value='Water'>Água</option>
+              <option value='Gas'>Gás</option>
+            </Field>
+          <ErrorMessage name="sensorType" class="text-danger" />
+          </div>
+        </div>
+        
       </div>
 
       <div class="form-group row mt-3">
-        <label for="sensorName" class="col-sm-2 col-form-label">Tipo:</label>
-        <div class="col-sm-8">
-          <Field
-            id="sensorType"
-            v-model="sensor.sensorType"
-            :disabled="mode == 'edit'"
-            as="select"
-            class="form-control"
-            name="sensorType" 
-          >
-            <option value="" disabled="disabled">Selecione um tipo de sensor</option>
-            <option value='Electricity'>Eletricidade</option>
-            <option value='Water'>Água</option>
-            <option value='Gas'>Gás</option>
-          </Field>
+        <!-- Sensor Type -->
+        <div class="col-sm-6" v-if='mode == "edit"'>
+          <label for="sensorGuid" class="col-form-label">Identificador único</label>
+          <div>
+            <div class="input-group">
+              <input id="sensorGuid" v-model="sensor.sensorId" disabled class="form-control" />
+              <div class="input-group-append">
+                <button @click="copyToClipboard(sensor.sensorId)" class="btn btn-primary" type="button">Copiar</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <ErrorMessage name="sensorType" class="text-danger" />
-      </div>
 
-      <!-- Sensor Type -->
-      <div class="form-group row mt-3" v-if='mode == "edit"'>
-        <label for="sensorGuid" class="col-sm-2 col-form-label">Identificador único:</label>
-        <div class="col-sm-8">
-          <div class="input-group">
-            <input id="sensorGuid" v-model="sensor.sensorId" disabled class="form-control" />
-            <div class="input-group-append">
-              <button @click="copyToClipboard(sensor.sensorId)" class="btn btn-primary" type="button">Copiar</button>
+
+        <!-- Sensor Guid -->
+        <div class="col-sm-6" v-if='mode == "edit"'>
+          <label for="sensorGuid" class="col-form-label">Chave de integração</label>
+          <div>
+            <div class="input-group">
+              <input id="sensorGuid" v-model="sensor.sensorGuid" disabled class="form-control" />
+              <div class="input-group-append">
+                <button @click="copyToClipboard(sensor.sensorGuid)" class="btn btn-primary" type="button">Copiar</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-
-      <!-- Sensor Guid -->
-      <div class="form-group row mt-3" v-if='mode == "edit"'>
-        <label for="sensorGuid" class="col-sm-2 col-form-label">Chave de integração:</label>
-        <div class="col-sm-8">
-          <div class="input-group">
-            <input id="sensorGuid" v-model="sensor.sensorGuid" disabled class="form-control" />
-            <div class="input-group-append">
-              <button @click="copyToClipboard(sensor.sensorGuid)" class="btn btn-primary" type="button">Copiar</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div v-if='mode == "edit"' class="col-sm-12 mt-3 mb-3">
         <button v-if="isEditMode" :disabled="isLoading" type="submit" class="btn btn-primary mr-2" style="margin-right: 1%;">Salvar</button>

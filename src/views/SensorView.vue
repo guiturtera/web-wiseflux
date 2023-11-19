@@ -13,6 +13,7 @@
     </div>
       <div v-if="sensor">
         <SensorHandler :fetchedSensor='sensor' mode='edit'/>
+        <AddSensorMeasure :fetchedSensor='sensor'/>
       </div>
       <div v-else>
           <h3>Carregando sensor...</h3>
@@ -35,13 +36,15 @@ import SensorService from "../services/sensor.service"
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from "yup";
 import SensorHandler from '../components/SensorHandler.vue';
+import AddSensorMeasure from '../components/AddSensorMeasure.vue';
 
 export default {
   components: {
     Form,
     Field,
     ErrorMessage,
-    SensorHandler
+    SensorHandler,
+    AddSensorMeasure
   },
   data() {
     const schema = yup.object().shape({

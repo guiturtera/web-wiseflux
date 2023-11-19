@@ -16,6 +16,9 @@ class SensorService {
   deleteSensor(sensorId) {
     return api.delete(`Sensor/delete/${sensorId}`)
   }
+  addMeasure(sensorId, sensorGuid, measureToAdd) {
+    return api.post(`SensorMeasure/add/${sensorId}/${sensorGuid}`, measureToAdd)
+  }
 }
 
 export default new SensorService();
