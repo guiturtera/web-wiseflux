@@ -14,6 +14,7 @@
       <div v-if="sensor">
         <SensorHandler :fetchedSensor='sensor' mode='edit'/>
         <AddSensorMeasure :fetchedSensor='sensor'/>
+        <SensorDashboard :sensorId="sensor.sensorId"/>
       </div>
       <div v-else>
           <h3>Carregando sensor...</h3>
@@ -36,6 +37,7 @@ import SensorService from "../services/sensor.service"
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from "yup";
 import SensorHandler from '../components/SensorHandler.vue';
+import SensorDashboard from '../components/SensorDashboard.vue';
 import AddSensorMeasure from '../components/AddSensorMeasure.vue';
 
 export default {
@@ -44,7 +46,8 @@ export default {
     Field,
     ErrorMessage,
     SensorHandler,
-    AddSensorMeasure
+    AddSensorMeasure,
+    SensorDashboard
   },
   data() {
     const schema = yup.object().shape({
@@ -60,12 +63,6 @@ export default {
   },
   async created() {
     this.sensor = (await SensorService.getSensor(this.$route.params.sensorId)).data?.response;
-
-    // Fetch measures based on the retrieved sensorId
-    //if (this.sensor && this.sensor.sensorId) {
-      //const measuresResponse = await SensorService.getSensorMeasures(this.sensor.sensorId);
-      //this.sensorMeasures = measuresResponse.data?.response;
-    //}
   },
   methods: {
     explainVariables() {

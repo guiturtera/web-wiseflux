@@ -19,6 +19,9 @@ class SensorService {
   addMeasure(sensorId, sensorGuid, measureToAdd) {
     return api.post(`SensorMeasure/add/${sensorId}/${sensorGuid}`, measureToAdd)
   }
+  getMeasures(sensorId, start_date, end_date) {
+    return api.get(`SensorMeasure/get/${sensorId}`, { params: { start_date, end_date } })
+  }
 }
 
 export default new SensorService();
