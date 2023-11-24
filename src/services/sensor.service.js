@@ -22,6 +22,15 @@ class SensorService {
   getMeasures(sensorId, start_date, end_date) {
     return api.get(`SensorMeasure/get/${sensorId}`, { params: { start_date, end_date } })
   }
+  getHourlyAverageMeasures(sensorId, start_date, end_date) {
+    return api.get(`SensorMeasure/get/averageByHour/${sensorId}`, { params: { start_date, end_date } })
+  }
+  getDailyAverageMeasures(sensorId, start_date, end_date) {
+    return api.get(`SensorMeasure/get/averageByDay/${sensorId}`, { params: { start_date, end_date } })
+  }
+  getMonthlyAverageMeasures(sensorId, start_date, end_date) {
+    return api.get(`SensorMeasure/get/averageByMonth/${sensorId}`, { params: { start_date, end_date } })
+  }
 }
 
 export default new SensorService();

@@ -1,9 +1,10 @@
 <template>
-  <BarChart :labels="month_labels" :datasets="month_values"/>
+  <BarChart  v-if="isMounted" :labels="hourly_labels" :datasets="hourly_values"/>
 </template>
 
 
 <script>
+import { ref } from 'vue'
 import BarChart from './BarChart.vue'
 import SensorService from "../services/sensor.service"
 import { subDays, format } from 'date-fns'
@@ -14,29 +15,47 @@ export default {
     },
     data() {
       return {
-        measures: [],
-        month_labels: [],
-        month_values: []
+        isMounted: false,
+        start_date: null,
+        end_date: null,
+        hourly_average_measures: [],
+        hourly_labels: [],
+        hourly_values: [],
+        daily_average_measures: [],
+        daily_labels: [],
+        daily_values: [],
+        monthly_average_measures: [],
+        monthly_labels: [],
+        monthly_values: []
       }
     },
     components: {
         BarChart
     },
     async created() {
-      let current_date = new Date()
-      this.measures = (await SensorService.getMeasures(this.sensorId, current_date, subDays(current_date, 7))).data.response
-      this.formatBarData()
+      this.isMounted = false
+      this.start_date = new Date()
+      this.end_date = subDays(this.start_date, 7)
+
+      this.hourly_average_measures = (await SensorService.getHourlyAverageMeasures(this.sensorId, this.start_date, this.end_date)).data.response
+      let res = this.sortdByDate(this.hourly_average_measures)
+      this.hourly_labels = res['labels']
+      this.hourly_values = res['dataset']
+      this.isMounted = true
+    },
+    mounted() {
     },
     methods: {
-      formatBarData() {
-        let grouped_by = Object.groupBy(this.measures, (measure) => format(new Date(measure.measureTime), 'MM/yyyy'))
+      sortdByDate(specified_measures) {
+        const labels = [];
+        const dataset = [];
 
-        this.month_labels = Object.keys(grouped_by)
-        this.month_values = []
-        for (let i = 0; i < this.month_labels; i++) {
-          console.log(i)
-        }
+        specified_measures.forEach(obj => {
+          labels.push(obj.measureTime);
+          dataset.push(obj.measureValue);
+        });
 
+        return { labels, dataset }
       }
     }
 }
