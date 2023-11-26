@@ -116,7 +116,7 @@ export default {
         let formattedEndDate = new Date(this.endDate)
 
         let dailyMeasures = []
-        if (differenceInDays(formattedStartDate, formattedEndDate) < 60) {
+        if (differenceInDays(formattedStartDate, formattedEndDate) < 30) {
           this.measures = (await SensorService.getHourlyAverageMeasures(this.sensorId, formattedStartDate, formattedEndDate)).data.response    
           dailyMeasures = (await SensorService.getDailyAverageMeasures(this.sensorId, formattedStartDate, formattedEndDate)).data.response
         } else {

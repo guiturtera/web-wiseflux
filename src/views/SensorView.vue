@@ -9,7 +9,7 @@
       <div class="container">
         <div class="row">
             <div class="col-sm-9">
-                <h2>Configurações do sensor</h2>
+                <h2>Configurações</h2>
             </div>
             <div class="col-sm-3">
                 <div class= "col-sm-6">

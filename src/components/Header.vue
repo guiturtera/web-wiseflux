@@ -1,9 +1,13 @@
 <script>
 import EventBus from "../common/EventBus";
 import TokenService from "../services/token.service";
+import Notification from "../components/Notification.vue"
 
 export default {
   name: 'Header',
+  components: {
+    Notification
+  },
   computed: {
     currentUser() {
       return TokenService.getUser(this.$store);
@@ -36,11 +40,14 @@ export default {
                     <RouterLink to="/cadastrar" class="nav-link active">Cadastrar</RouterLink>
                 </li>
             </ul>
-            <ul v-if="currentUser" class="d-flex navbar-nav">
-                <li class="nav-item">
+            <ul v-if="currentUser" class="d-flex navbar-nav ">
+                <li class="nav-item mx-2 my-auto">
+                  <Notification class="nav-link active" />
+                </li>
+                <li class="nav-item mx-2">
                     <RouterLink to="/perfil" class="nav-link active">Perfil</RouterLink>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mx-2">
                     <RouterLink to="/sensores" class="nav-link active">Sensores</RouterLink>
                 </li>
                 <li class="nav-item">
