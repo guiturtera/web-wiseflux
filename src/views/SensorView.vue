@@ -85,6 +85,12 @@ Caso não exista uma integração nativa com seu sensor inteligente, é possíve
           }, 10);
         }
       },
+      async beforeRouteUpdate(to, from, next) {
+        this.sensor = (await SensorService.getSensor(this.$route.params.sensorId)).data?.response;
+
+        // Don't forget to call next() to indicate that the hook has finished
+        next();
+      },
   }
 };
 </script>

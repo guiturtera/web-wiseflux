@@ -5,7 +5,7 @@
       <div class="container">
         <ul class="list-group">
           <li class="list-group-item my-2" v-for="(notification, index) in formattedNotifications" :key="index" @mouseover="hoverItem(index)" @mouseout="unhoverItem(index)">
-            <RouterLink :to="'/sensores/' + notification.sensor" class="nav-link active">{{ notification.formattedTxt }}</RouterLink>
+            <span class="nav-link active" @click='onNotificationClick(notification)'>{{ notification.formattedTxt }}</span>
           </li>
         </ul>
       </div>
@@ -36,10 +36,20 @@ export default {
     }   
 
     this.noNotifications = this.notifications.length > 0
-
     this.formatNotifications(this.notifications)
   },
   methods: {
+    onNotificationClick(notification) {
+        this.showNotifications = false;
+        let lastRoute = this.$router.currentRoute._rawValue.fullPath
+
+        this.$router.push(`/sensores/${notification.sensor}`);
+
+        
+        if (lastRoute.startsWith('/sensores/')) {
+            setTimeout(() => location.reload(), 50);
+        } 
+    },
     formatNotifications(notifications) {
         this.formattedNotifications = []
         notifications = notifications.sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime));
