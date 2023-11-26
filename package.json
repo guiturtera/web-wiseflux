@@ -17,6 +17,7 @@
     "chart.js": "^4.4.0",
     "date-fns": "^2.30.0",
     "jquery": "^3.7.1",
+    "chartjs-adapter-date-fns": "^3.0.0"
     "sweetalert2": "^11.10.0",
     "vee-validate": "^4.11.8",
     "vue": "^3.3.4",
