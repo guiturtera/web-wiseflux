@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class='mb-5' v-if='sensor'>
+      <h2 class="mb-4">Dashboard</h2>
+        <SensorDashboard :sensorId="sensor.sensorId" :sensorUnit="sensor.sensorUnit"/>
+    </div>
+
     <div>
       <div class="container">
         <div class="row">
@@ -7,25 +12,27 @@
                 <h2>Configurações do sensor</h2>
             </div>
             <div class="col-sm-3">
-                <button @click='explainVariables' class="btn btn-secondary"><span>Info</span></button>
+                <div class= "col-sm-6">
+                  <button @click='explainVariables' class="btn btn-secondary"><span>Info</span></button>
+                </div>
             </div>
         </div>
     </div>
       <div v-if="sensor">
         <SensorHandler :fetchedSensor='sensor' mode='edit'/>
-        <AddSensorMeasure :fetchedSensor='sensor'/>
-        <SensorDashboard :sensorId="sensor.sensorId"/>
+
+        <h4 @click="toggleAddSensorMeasure" class="btn btn-secondary">
+          <span>Simular dados</span>
+          <i :class="{ 'arrow-up': !showAddSensorMeasure, 'arrow-down': showAddSensorMeasure }"></i>
+        </h4>
+        <div>
+          <Transition name="fade" mode="out-in">
+            <AddSensorMeasure v-show="showAddSensorMeasure" :fetchedSensor='sensor'/>
+          </Transition>
+        </div>
       </div>
       <div v-else>
           <h3>Carregando sensor...</h3>
-      </div>
-    </div>
-
-    <div>
-      <h2 class="mt-5">Dashboard do sensor</h2>
-      <div v-for="measure in sensorMeasures" :key="measure.MeasureId">
-        <p>Value: {{ measure.MeasureValue }}</p>
-        <p>Time: {{ measure.MeasureTime }}</p>
       </div>
     </div>
     
@@ -34,31 +41,20 @@
 
 <script>
 import SensorService from "../services/sensor.service"
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from "yup";
 import SensorHandler from '../components/SensorHandler.vue';
 import SensorDashboard from '../components/SensorDashboard.vue';
 import AddSensorMeasure from '../components/AddSensorMeasure.vue';
 
 export default {
   components: {
-    Form,
-    Field,
-    ErrorMessage,
     SensorHandler,
     AddSensorMeasure,
     SensorDashboard
   },
   data() {
-    const schema = yup.object().shape({
-      sensorName: yup.string().required("Nome do sensor é obrigatório"),
-      sensorType: yup.string().required("É necessário selecionar um tipo de sensor").oneOf(['Electricity', 'Water', 'Gas'], "Tipo de sensor inválido!"),
-    });
-
     return {
       sensor: null, 
-      sensorMeasures: [],
-      schema
+      showAddSensorMeasure: false
     };
   },
   async created() {
@@ -79,11 +75,32 @@ Caso não exista uma integração nativa com seu sensor inteligente, é possíve
           confirmButtonColor: "gray"
         }
       )
-    }
+    },
+    toggleAddSensorMeasure() {
+        this.showAddSensorMeasure = !this.showAddSensorMeasure;
+
+        if (this.showAddSensorMeasure) {
+          setTimeout(() => {
+            window.scrollTo(0, document.body.scrollHeight);
+          }, 10);
+        }
+      },
   }
 };
 </script>
 
 <style scoped>
-/* Add your additional styling here if needed */
+
+  .arrow-up::before {
+    content: '↑';
+    display: inline-block;
+    margin-left: 5px; /* adjust as needed */
+  }
+
+  .arrow-down::before {
+    content: '↓';
+    display: inline-block;
+    margin-left: 5px; /* adjust as needed */
+  }
+
 </style>

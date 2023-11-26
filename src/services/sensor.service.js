@@ -19,17 +19,17 @@ class SensorService {
   addMeasure(sensorId, sensorGuid, measureToAdd) {
     return api.post(`SensorMeasure/add/${sensorId}/${sensorGuid}`, measureToAdd)
   }
-  getMeasures(sensorId, start_date, end_date) {
-    return api.get(`SensorMeasure/get/${sensorId}`, { params: { start_date, end_date } })
+  getMeasures(sensorId, startDate, endDate) {
+    return api.get(`SensorMeasure/get/${sensorId}`, { params: { startDate, endDate } })
   }
-  getHourlyAverageMeasures(sensorId, start_date, end_date) {
-    return api.get(`SensorMeasure/get/averageByHour/${sensorId}`, { params: { start_date, end_date } })
+  getHourlyAverageMeasures(sensorId, startDate, endDate) {
+    return api.get(`SensorMeasure/get/averageByHour/${sensorId}`, { params: { startDate, endDate } })
   }
-  getDailyAverageMeasures(sensorId, start_date, end_date) {
-    return api.get(`SensorMeasure/get/averageByDay/${sensorId}`, { params: { start_date, end_date } })
+  getDailyAverageMeasures(sensorId, startDate, endDate) {
+    return api.get(`SensorMeasure/get/averageByDay/${sensorId}`, { params: { startDate, endDate } })
   }
-  getMonthlyAverageMeasures(sensorId, start_date, end_date) {
-    return api.get(`SensorMeasure/get/averageByMonth/${sensorId}`, { params: { start_date, end_date } })
+  getMonthlyAverageMeasures(sensorId, startDate, endDate) {
+    return api.get(`SensorMeasure/get/averageByMonth/${sensorId}`, { params: { startDate, endDate } })
   }
 }
 

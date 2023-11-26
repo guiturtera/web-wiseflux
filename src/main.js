@@ -9,10 +9,10 @@ import { FontAwesomeIcon } from './plugins/font-awesome'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+import setupInterceptors from './services/setupInterceptors'
+
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
-
-import setupInterceptors from './services/setupInterceptors'
 
 const app = createApp(App)
 
