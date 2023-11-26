@@ -42,7 +42,7 @@ export default {
   methods: {
     formatNotifications(notifications) {
         this.formattedNotifications = []
-        notifications = notifications.sort((a, b) => new Date(a.notificationTime) - new Date(b.notificationTime));
+        notifications = notifications.sort((a, b) => new Date(b.notificationTime) - new Date(a.notificationTime));
         for (let i = 0; i < notifications.length; i++) {
             let notification = notifications[i]
             let notificationDays = differenceInDays(new Date(), new Date(notification['notificationTime']))
